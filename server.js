@@ -50,4 +50,4 @@ app.delete('/api/searches/:id', (req,res) => {
   res.sendStatus(200);
 });
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+app.listen(1342, () => console.log('Server listening on port 1342!'));
