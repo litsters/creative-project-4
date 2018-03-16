@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content has-text-centered">
         <p><strong>Bounty Board</strong> by Sam Litster. View source code at 
-          <a href="https://github.com/litsters/creative-project-3">GitHub</a>.
+          <a href="https://github.com/litsters/creative-project-4">GitHub</a>.
         </p>
       </div>
     </div>
