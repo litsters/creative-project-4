@@ -27,7 +27,7 @@
      name: 'Navbar',
      data () {
        return {
-         imagePath: '/creative-project-4/dist/static/images/icon.png'
+         imagePath: '/static/images/icon.png'
        }
      },
      methods: {
