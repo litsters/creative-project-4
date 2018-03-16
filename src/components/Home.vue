@@ -236,6 +236,7 @@
        deleteSearch: function(id) {
          axios.delete('/api/searches/' + id).then(response => {
            this.loadSearches();
+           if(this.selectedSearch !== null && id === this.selectedSearch.id) this.clearSearch();
          }).catch(err => {
            alert(err);
          });
