@@ -5,7 +5,7 @@
       <div class="container">
         <h1 class="title">Welcome to the Bounty Board!</h1>
         <h2 class="subtitle">
-          Your one stop to find your dream job.
+          Your one stop to find your dream job. Now using Node!
         </h2>
         <p>If this page doesn't make sense to you, check out the <router-link to="/about">About</router-link> page.
         </p>
