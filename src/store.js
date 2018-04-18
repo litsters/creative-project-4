@@ -5,6 +5,11 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
+const getAuthHeader = () => {
+  let headers = {headers: {'Authorization': JSON.parse(localStorage.getItem('bbtoken')).jwt}};
+  return headers;
+}
+
 export default new Vuex.Store({
   state: {
     savedSearches: [],
@@ -52,7 +57,9 @@ export default new Vuex.Store({
       state.selectedSearch = newSearch;
     },
     setToken(state, token) {
-      localStorage.setItem('bbtoken', token);
+      localStorage.removeItem('bbtoken');
+      let temp = JSON.stringify(token, null, 2);
+      localStorage.setItem('bbtoken', temp);
       state.token = token;
     },
     clearToken(state) {
@@ -66,21 +73,21 @@ export default new Vuex.Store({
   actions: {
     // Saved searches
     getSavedSearches(context) {
-      axios.get('/api/searches/' + context.getters.user_id).then(response => {
+      axios.get('/api/searches/' + context.getters.user_id, getAuthHeader()).then(response => {
         context.commit('setSaved', response.data.searches);
       }).catch(err => {
         alert(err);
       });
     },
     editSavedSearch(context, item) {
-      axios.put('/api/searches/' + context.getters.user_id + '/' + item.id, item).then(response => {
+      axios.put('/api/searches/' + context.getters.user_id + '/' + item.id, item, getAuthHeader()).then(response => {
         context.dispatch('getSavedSearches');
       }).catch(err => {
         alert(err);
       });
     },
     deleteSavedSearch(context, id) {
-      axios.delete('/api/searches/' + context.getters.user_id + '/' + id).then(response => {
+      axios.delete('/api/searches/' + context.getters.user_id + '/' + id, getAuthHeader()).then(response => {
         context.dispatch('getSavedSearches');
         if(context.state.selectedSearch !== null && id === context.state.selectedSearch.id){
           context.commit('clearSearch');
@@ -90,7 +97,7 @@ export default new Vuex.Store({
       });      
     },
     saveNewSearch(context, item) {
-      axios.post('/api/searches/' + context.getters.user_id, item).then(response => {
+      axios.post('/api/searches/' + context.getters.user_id, item, getAuthHeader()).then(response => {
         context.commit('addSavedSearch', item);
       }).catch(err => {
         alert(err);
@@ -127,9 +134,12 @@ export default new Vuex.Store({
     },
     //Initialize token
     initialize(context) {
-      let token = localStorage.getItem('bbtoken');
-      if(token === null || token === undefined) context.commit('clearToken');
-      else context.commit('setToken', token );
+      let temp = localStorage.getItem('bbtoken');
+      if(temp === null || temp === undefined) context.commit('clearToken');
+      else{
+        let token = JSON.parse(temp);
+        context.commit('setToken', token);
+      }
     }
   }
 });

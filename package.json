@@ -13,6 +13,7 @@
     "axios": "^0.18.0",
     "bcrypt": "^2.0.0",
     "bulma": "^0.6.2",
+    "jsonwebtoken": "^8.2.1",
     "knex": "^0.14.6",
     "mariasql": "^0.2.6",
     "moment": "^2.22.1",

@@ -17,7 +17,31 @@ const knex = require('knex')(config);
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+// jwt setup
+const jwt = require('jsonwebtoken');
+let jwtSecret = process.env.jwtSecret;
+if (jwtSecret === undefined) {
+  console.log("You need to define a jwtSecret environment variable to continue.");
+  knex.destroy();
+  process.exit();
+}
+
 // API
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if(!token){
+    return res.status(403).send({error: 'No token provided.'});
+  }
+  jwt.verify(token, jwtSecret, function(err, decoded) {
+    if(err){
+      console.log('AUTHENTICATE: ' + err);
+      return res.status(500).send({error: 'Failed to authenticate token.'});
+    }
+    req.userID = decoded.id;
+    next();
+  });
+}
 
 // Log in
 app.post('/api/login', (req,res) => {
@@ -30,9 +54,14 @@ app.post('/api/login', (req,res) => {
     return [bcrypt.compare(req.body.password, user.hash), user];
   }).spread((result, user) => {
     if(result){
+      let jwtToken = jwt.sign({id: user.id}, jwtSecret, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+
       let token = {
         username: user.username,
-        id: user.id
+        id: user.id,
+        jwt: jwtToken
       };
       res.status(200).json(token);
     }
@@ -60,9 +89,13 @@ app.post('/api/register', (req,res) => {
   }).then(ids => {
     return knex('users').where('id', ids[0]).first().select('username', 'id');
   }).then(user => {
+    let jwtToken = jwt.sign({id: user.id}, jwtSecret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
     let token = {
       username: user.username,
-      id: user.id
+      id: user.id,
+      jwt: jwtToken
     };
     res.status(200).json(token);
     return;
@@ -75,8 +108,12 @@ app.post('/api/register', (req,res) => {
 });
 
 // Get searches for a user
-app.get('/api/searches/:id', (req,res) => {
+app.get('/api/searches/:id', verifyToken, (req,res) => {
   let id = parseInt(req.params.id);
+  if(id !== req.userID){
+    res.status(403).send();
+    return;
+  }
   knex('users').join('searches', 'users.id', 'searches.user_id')
     .where('users.id',id)
     .select('searches.id', 'title', 'keywords', 'location').then(searches => {
@@ -88,8 +125,12 @@ app.get('/api/searches/:id', (req,res) => {
 });
 
 // Edit search
-app.put('/api/searches/:id/:search_id', (req,res) => {
+app.put('/api/searches/:id/:search_id', verifyToken, (req,res) => {
   let id = parseInt(req.params.id);
+  if(id !== req.userID){
+    res.status(403).send();
+    return;
+  }
   let search_id = parseInt(req.params.search_id);
   knex('users').where('id', id).first().then(user => {
     return knex('searches').where('id', search_id).update({'keywords': req.body.keywords, 'location': req.body.location});
@@ -104,8 +145,12 @@ app.put('/api/searches/:id/:search_id', (req,res) => {
 }); 
 
 // Save new search
-app.post('/api/searches/:id', (req,res) => {
+app.post('/api/searches/:id', verifyToken, (req,res) => {
   let id = parseInt(req.params.id);
+  if(id !== req.userID){
+    res.status(403).send();
+    return;
+  }
   knex('users').where('id',id).first().then(user => {
     return knex('searches').insert({title: req.body.title, keywords: req.body.keywords, location: req.body.location, user_id: id});
   }).then(ids => {
@@ -119,8 +164,12 @@ app.post('/api/searches/:id', (req,res) => {
 });
 
 // Delete search
-app.delete('/api/searches/:id/:search_id', (req,res) => {
+app.delete('/api/searches/:id/:search_id', verifyToken, (req,res) => {
   let id = parseInt(req.params.id);
+  if(id !== req.userID){
+    res.status(403).send();
+    return;
+  }
   let search_id = parseInt(req.params.search_id);
   knex('users').where('id', id).first().then(user => {
     return knex('searches').where({'id': search_id, 'user_id': id}).first().del();
