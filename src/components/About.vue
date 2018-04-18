@@ -15,7 +15,9 @@
         <h1 class="title">How To Use</h1>
         <p>It's pretty simple! Just put in the keywords you're looking for, like "java" and "developer", the location you're looking in, and click 'Search Jobs.' That's all you have to do!</p><br>
         <p>If you find that you're getting a lot of results from one database that aren't useful, don't worry! Click on the 'Customize Job Boards' button to open a menu of all the available databases.  Select ones you want results from, and de-select ones that you don't. Click 'Save Changes' and you're ready to go!</p><br>
-        <p>We've now added a feature to save your search terms! If you want to remember the search terms you used, click 'Save Search Terms.' You'll be prompted to enter a unique id for your search.  Once this done, you can always load saved searches.  If you have a saved search loaded and you save it, it will edit the saved terms rather than creating a new saved search.  When selecting a saved search, clicking the close button will delete the saved search forever.</p>
+        <p>We've now added a feature to save your search terms! If you want to remember the search terms you used, click 'Save Search Terms.' You'll be prompted to enter a unique id for your search.  Once this done, you can always load saved searches.  If you have a saved search loaded and you save it, it will edit the saved terms rather than creating a new saved search.  When selecting a saved search, clicking the close button will delete the saved search forever.</p><br>
+        <p>As of now, your saved searches will be tied to you personally! When you create an account with Bounty Board, you will be able to save your search terms for later use.  If you don't want to make an account, well, that's just fine!  You can still use Bounty Board, you just won't be able to save search terms. If you want to make an account, just click 'Sign Up' at the top of the page.
+        </p>
       </div>
     </section>
   </div>

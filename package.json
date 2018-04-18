@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bcrypt": "^2.0.0",
     "bulma": "^0.6.2",
+    "knex": "^0.14.6",
+    "mariasql": "^0.2.6",
+    "moment": "^2.22.1",
     "vue": "^2.5.13",
     "vue-resource": "^1.4.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
